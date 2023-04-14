@@ -1,1 +1,29 @@
-<p>books works!</p>
+<h1 class="text-center-fs-4 py-2 mb-2">Libros</h1>
+
+<section class="container-lg">
+    <table class="table mx-a table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Titulo</th>
+                <th>Descripcion</th>
+                <th>Paginas</th>
+                <th>Author</th>
+                <th>Categoria</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let Book of ListBooks">
+                <td>{{Book.title}}</td>
+                <td>{{Book.description}}</td>
+                <td>{{Book.pages}}</td>
+                <td><a href="/authors?id={{Book.authorId}}">Ver Author</a></td>
+                <td><a href="/categories?id={{Book.categoryId}}">Ver Categoria</a></td>
+                <td>
+                    <button class="btn btn-secondary" data-id="{{Book._id}}">Editar</button>
+                    <button class="btn btn-danger" data-id="{{Book._id}}">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>

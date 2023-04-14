@@ -1,1 +1,25 @@
-<p>authors works!</p>
+<h1 class="text-center-fs-4 py-2 mb-2">Autores</h1>
+
+<section class="container">
+    <table class="table mx-a table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Nacionalidad</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let Author of ListAuthors">
+                <td>{{Author.name}}</td>
+                <td>{{Author.lastName}}</td>
+                <td>{{Author.country}}</td>
+                <td>
+                    <button class="btn btn-primary" data-id="{{Author._id}}">Editar</button>
+                    <button class="btn btn-danger" data-id="{{Author._id}}">Eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>

@@ -1,1 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
+/* Custom properties */
+:root{
+    --primary-color: rgb(16, 26, 39);
+}
+
+
+/* Reset */
+
+body{
+    min-height: 100vh;
+}
+main{
+    min-height: calc(100vh - 3em);
+}
+
+header, footer{
+    background-color: var(--primary-color);
+}
