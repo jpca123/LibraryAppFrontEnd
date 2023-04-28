@@ -1,0 +1,46 @@
+<div class="container">
+    <h1 class="text-center fs-4 my-2">Registro</h1>
+    <div class="container">
+        <div class="form container-sm">
+            <div class="form-group my-2">
+                <label for="userName" class="form-label">Nombre de usuario</label>
+                <input type="text" name="userName" id="userName" placeholder="username" [(ngModel)]="user.userName" minlength="3" maxlength="80" class="form-control">
+            </div>
+            <div class="form-group my-2">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" name="name" id="name" placeholder="Nombre" [(ngModel)]="user.name" maxlength="60" class="form-control">
+            </div>
+            <div class="form-group my-2">
+                <label for="lastName" class="form-label">Apellido</label>
+                <input type="text" name="lastName" id="lastName" placeholder="Apellido" [(ngModel)]="user.lastName" class="form-control">
+            </div>
+            <div class="form-group my-2">
+                <label for="" class="form-label">Email</label>
+                <input type="email" name="email" [(ngModel)]="user.email" placeholder="Email" maxlength="50" id="email" class="form-control">
+            </div>
+            <div class="form-group my-2">
+                <label for="" class="form-label">Genero</label>
+                <select name="gender" [(ngModel)]="user.gender" id="gender" class="form-select">
+                    <option selected disabled>Selecciona Genero</option>
+                    <option value="Masculine">Masculino</option>
+                    <option value="Femenine">Femenino</option>
+                    <option value="Prefer not say">Prefiero no decirlo</option>
+                </select>
+            </div>
+            <div class="form-group my-2">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" name="password" placeholder="Contraseña" [(ngModel)]="user.password" maxlength="50" id="password" class="form-control">
+            </div>
+            <div class="form-group my-2">
+                <label for="password2" class="form-label">Repite la contraseña</label>
+                <input type="password" name="password2" [(ngModel)]="passwordConfirm" maxlength="50" id="password2" class="form-control" placeholder="Repite Contraseña">
+            </div>
+
+
+            <section class="d-flex align-items-center justify-content-around">
+                <button class="my-2 mx-a btn btn-primary" (click)="register()" type="button">Registrar</button>
+                <button class="my-2 mx-a btn btn-secondary" (click)="reset()" type="button">Limpiar</button>
+            </section>
+        </div>
+    </div>
+</div>

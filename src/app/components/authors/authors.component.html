@@ -1,25 +1,135 @@
-<h1 class="text-center-fs-4 py-2 mb-2">Autores</h1>
+<h1 class="text-center fs-4 py-2 mb-2">Autores</h1>
 
-<section class="container">
-    <table class="table mx-a table-dark table-striped">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Nacionalidad</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let Author of ListAuthors">
-                <td>{{Author.name}}</td>
-                <td>{{Author.lastName}}</td>
-                <td>{{Author.country}}</td>
-                <td>
-                    <button class="btn btn-primary" data-id="{{Author._id}}">Editar</button>
-                    <button class="btn btn-danger" data-id="{{Author._id}}">Eliminar</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<section class="container-lg">
+  <p class="mx-a my-2">Añadir un autor <button class="btn btn-primary mx-1" data-bs-toggle="modal"
+      data-bs-target="#modalCreate">Añadir</button></p>
+
+
+  <!-- Table of data -->
+  <table class="table mx-a table-striped">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Pais</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let Author of ListAuthors">
+        <td>{{Author.name}}</td>
+        <td>{{Author.lastName}}</td>
+        <td>{{Author.country}}</td>
+        <td class="d-flex justify-content-around flex-wrap">
+          <button class="btn btn-secondary my-1 mx-1" data-bs-toggle="modal" data-bs-target="#modalupdate"
+            (click)="loadUpdate(Author._id)" data-id="{{Author._id}}">editar</button>
+          <button class="btn btn-danger my-1 mx-1" data-bs-toggle="modal" data-bs-target="#modalDelete"
+            (click)="loadUpdate(Author._id)" data-id="{{Author._id}}">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </section>
+
+<div class="container-sm text-center">
+  <button class="btn btn-primary" *ngIf="canLoadMore" (click)="loadData()">Cargar más</button>
+</div>
+
+<!-- modal create -->
+<div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Crear Autor</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form">
+          <div class="form-group my-2">
+            <label for="crearName" class="form-label">Nombre</label>
+            <input type="text" [(ngModel)]="AuthorCreate.name" placeholder="Nombre..." maxlength="80" minlength="3"
+              required name="title" id="crearName" class="form-control">
+          </div>
+
+          <div class="form-group my-2">
+            <label for="crearLastName" class="form-label">lastName</label>
+            <input type="text" [(ngModel)]="AuthorCreate.lastName" placeholder="Apellido..." maxlength="80" minlength="3"
+              required name="lastName" id="crearLastName" class="form-control">
+          </div>
+
+          
+          <div class="form-group my-2">
+            <label for="crearCountry" class="form-label">País</label>
+            <input type="text" [(ngModel)]="AuthorCreate.country" placeholder="Pais..." maxlength="80" minlength="3" required name="country" id="crearCountry" class="form-control">
+          </div>
+
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-success" (click)="create()" data-bs-dismiss="modal">Crear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- modal update -->
+<div class="modal fade" id="modalupdate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">editar Autor</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form">
+            <div class="form-group my-2">
+              <label for="updateName" class="form-label">Nombre</label>
+              <input type="text" [(ngModel)]="AuthorUpdate.name" placeholder="Nombre..." maxlength="80" minlength="3"
+                required name="title" id="updateName" class="form-control">
+            </div>
+  
+            <div class="form-group my-2">
+              <label for="updateLastName" class="form-label">lastName</label>
+              <input type="text" [(ngModel)]="AuthorUpdate.lastName" placeholder="Apellido..." maxlength="80" minlength="3"
+                required name="lastName" id="updateLastName" class="form-control">
+            </div>
+  
+            
+            <div class="form-group my-2">
+              <label for="updateCountry" class="form-label">País</label>
+              <input type="text" [(ngModel)]="AuthorUpdate.country" placeholder="Pais..." maxlength="80" minlength="3" required name="country" id="updateCountry" class="form-control">
+            </div>
+  
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-success" (click)="update()" data-bs-dismiss="modal">Editar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- modal delete -->
+<div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Eliminar Autor</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estas seguro de eliminar el autor {{AuthorUpdate.name}} {{AuthorUpdate.lastName}}?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="delete()" data-bs-dismiss="modal">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>

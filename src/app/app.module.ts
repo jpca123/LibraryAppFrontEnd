@@ -8,19 +8,30 @@ import { AuthorsComponent } from './components/authors/authors.component';
 import { NavbarComponent } from './template/navbar/navbar.component';
 import { FooterComponent } from './template/footer/footer.component';
 import { FormsModule } from '@angular/forms';
-
+import { HttpClientModule } from '@angular/common/http';
+import { CategoriesComponent } from './components/categories/categories.component';
+import { HomeComponent } from './components/home/home.component';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 @NgModule({
   declarations: [
     AppComponent,
     FooterComponent,
     NavbarComponent,
     BooksComponent,
-    AuthorsComponent
+    AuthorsComponent,
+    CategoriesComponent,
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent,
+    ForgotPasswordComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,4 +1,6 @@
-export default interface Category{
+export default class Category{
     _id?: string;
-    category: string;
+    category?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }

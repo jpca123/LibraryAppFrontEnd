@@ -1,7 +1,9 @@
-export default interface Author{
+export default class Author {
     _id?: string;
-    name: string;
+    name?: string;
     lastName?: string;
-    country: string;
+    country?: string;
     description?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
