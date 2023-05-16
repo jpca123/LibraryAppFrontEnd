@@ -26,7 +26,8 @@ export class RegisterComponent implements OnInit {
   }
 
   register(){
-    if(!this.validData()) return alert("informacion invalida");
+    let message = this.validData();
+    if(message !== "") return alert(message);
 
     this.securityService.register(this.user).subscribe((data: any)=>{
       this.router.navigate(["/login"]);
@@ -41,12 +42,13 @@ export class RegisterComponent implements OnInit {
     this.passwordConfirm = "";
   }
 
-  validData(): boolean{
-    if(!this.user.userName) return false;
-    if(!this.user.email) return false;
-    if(!this.user.gender) return false;
-    if(!this.user.password) return false;
-    return true;
+  validData(): string{
+    if(!this.user.userName) return "es requerido el campo userName";
+    if(!this.user.email) return "es requerido el campo email";
+    if(!this.user.gender) return "es requerido el campo gender";
+    if(!this.user.password) return "es requerido el campo password";
+    if(this.user.password !== this.passwordConfirm) return "Las contraseñas no coinciden"
+    return "";
   }
 
 

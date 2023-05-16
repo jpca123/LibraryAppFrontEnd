@@ -27,9 +27,11 @@ export class LoginComponent implements OnInit {
     if(!this.validData()) return;
 
     this.securityService.login(this.user.userName!, this.user.password!).subscribe((data: any) =>{
-      let token: string = data.token as string;
-      this.securityService.createSession(token);
-      this.router.navigate(["/"]);
+      if(data.ok){
+        let token: string = data.token as string;
+        this.securityService.createSession(token);
+        this.router.navigate(["/"]);
+      }else console.log("fallo la request")
     }, (err: any)=>{
       alert("fallo el login");
       console.warn("Fallo login", err);

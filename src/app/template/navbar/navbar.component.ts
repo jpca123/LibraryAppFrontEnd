@@ -15,27 +15,30 @@ export class NavbarComponent implements OnInit {
   session: boolean = false;
   sessionSubscription = new Subscription();
 
-  constructor(securityService: SecurityService, router: Router) { 
+  constructor(securityService: SecurityService, router: Router) {
     this.securityService = securityService;
     this.router = router;
-    
-    this.sessionSubscription = securityService.getSessionObserver().subscribe(data =>{
+
+    this.sessionSubscription = securityService.getSessionObserver().subscribe(data => {
       this.session = data;
+
     })
+
   }
 
-  logout(){
-    this.securityService.logout().subscribe((data: any)=>{
-      if(data["ok"] && data["ok"] === true) {
-        this.securityService.closeSession();
-        this.router.navigate(["/login"])
-      }
-    }, (err: any)=>{
+  logout() {
+    this.securityService.logout().subscribe((data: any) => {
+      if(data.ok) return;
+      else console.warn('Sesion cerrada con error', data)
+    }, (err: any) => {
       console.warn("No se pudo cerrar session, al parecer no hay una sesion activa", err)
-    })
+    }, ()=> this.router.navigate(["/login"]))
+
+
   }
 
   ngOnInit(): void {
+
   }
 
 }

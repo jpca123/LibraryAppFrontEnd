@@ -21,11 +21,16 @@ export class BooksComponent implements OnInit {
   ListBooks: Book[] = [];
   ListAuthors: Author[] = [];
   ListCategories: Category[] = [];
+  ListFavorites: Object[] = [];
+  ErrorsCreate: string[] = [];
+  ErrorsUpdate: string[] = [];
 
   BookCreate: Book = new Book();
   BookUpdate: Book = new Book();
+  BookView: Book = new Book();
+  BookViewFavorite: boolean = false;
 
-  private limit: number = 2;
+  private limit: number = 10;
   private page: number = 1;
   private cuantity: number = this.limit * 2;
   canLoadMore: boolean = true;
@@ -45,88 +50,117 @@ export class BooksComponent implements OnInit {
     this.loadData();
     this.loadCategories();
     this.loadAuthors();
+    this.loadFavourites();
   }
 
-getCategory(id?: string): Category{
-  if(!id) {
-    console.log("no id");
-    return new Category();
+  getCategory(id?: string) {
+    if (!id) {
+      return "Desconocido";
+    }
+    let category: Category | undefined = this.ListCategories.find((el: Category) => el._id === id);
+    if (!category) {
+      return "Desconocido";
+    };
+    return category.category;
   }
-  let category: Category | undefined = this.ListCategories.find((el: Category)=> el._id === id);
-  if(!category) {
-    console.log("no se encontro categoria", category, id)
-    return new Category();
-  };
-  return category;
-}
+
+  getAuthor(id?: string) {
+    if (!id) {
+      return "Desconocido";
+    }
+    let author: Author | undefined = this.ListAuthors.find((el: Author) => el._id === id);
+    if (!author) {
+      return "Desconocido";
+    };
+    return `${author.name} ${author.lastName}`;
+  }
 
   loadData() {
     this.bookService.getAll(this.page, this.limit).subscribe((data: any) => {
-      console.log(data)
-      if (data.data) {
-        this.ListBooks = this.ListBooks.concat(data.data);
-      }
+      if (data.data) this.ListBooks = this.ListBooks.concat(data.data);
 
       if (data.paginator) this.cuantity = data.paginator.cuantity;
       this.canLoadMore = this.cuantity > (this.limit * this.page);
-      this.page += 1;
+      if(data.ok) this.page += 1;
     }, (err: any) => {
       console.warn("Fallo loadData", err)
     })
   }
 
-  loadAuthors(){
-    this.authorService.getAll(1, 100).subscribe((data: any)=>{
-      console.log(data)
-      if(data.data){
+  loadAuthors() {
+    this.authorService.getAll(1, 1000).subscribe((data: any) => {
+      if (data.data) {
         this.ListAuthors = this.ListAuthors.concat(data.data);
       }
-    }, (err: any)=>{
+    }, (err: any) => {
       console.warn("fallo loadAuthors", err);
     })
   }
 
-  loadCategories(){
-    this.categoryService.getAll(1, 100).subscribe((data: any)=>{
-      console.log(data)
-      if(data.data){
+  loadCategories() {
+    this.categoryService.getAll(1, 1000).subscribe((data: any) => {
+      if (data.data) {
         this.ListCategories = this.ListCategories.concat(data.data);
       }
-    }, (err: any)=>{
+    }, (err: any) => {
       console.warn("fallo loadCategories", err);
     })
   }
 
-  onSubmit(event: any){
-    event.preventDefault();
-    console.log(event.target.name);
-    let referenceBook: Book;
-
-    if(event.target.name === "create") referenceBook = this.BookCreate;
-    else referenceBook = this.BookUpdate; 
-
-    referenceBook.poster = event.target.poster.files[0];
-    referenceBook.document = event.target.document.files[0];
-
-    // let message: string | null = this.validData(referenceBook);
-    // if(message !== null) return alert(message);
-
-    let formData: FormData = new FormData(event.target);
-    console.log(formData);
-
-    if(event.target.name === "create") this.create(formData);
-    else {
-      formData.set("_id", referenceBook._id || "");
-      this.update(formData);
-    }
-    event.target.reset();
+  loadFavourites(){
+    this.bookService.getFavorites(1, 100).subscribe((data: any)=>{
+      if(data.ok){
+       return this.ListFavorites = data.data;
+      }
+      console.warn("fallo getAll fovourites")
+    }, (err: any)=>{
+      console.warn("fallo getAll fovourites", err)
+    })
   }
 
-  validData(book: Book): string | null{
-    if(!book) return "el libro es requerido";
-    if(!book.title) return "Debe incluir el titulo";
+  onSubmitCreate(event: any) {
+    event.preventDefault();
+
+    this.BookCreate.poster = event.target.poster.files[0];
+    this.BookCreate.document = event.target.document.files[0];
+
+    let errors: string[] = this.validData(this.BookCreate);
+    let formData: FormData = new FormData(event.target);
+
+    if (errors.length > 0) this.ErrorsCreate = [...errors];
+    else {
+      this.cleanErrors();
+      this.create(formData);
+      event.target.reset();
+    }
+  }
+
+  onSubmitUpdate(event: any){
+    event.preventDefault();
+
+    this.BookUpdate.poster = event.target.poster.files[0];
+    this.BookUpdate.document = event.target.document.files[0];
+
+    let errors: string[] = this.validData(this.BookUpdate);
+    let formData: FormData = new FormData(event.target);
+
+    formData.set("_id", this.BookUpdate._id || "");
+    if (errors && errors.length > 0) this.ErrorsUpdate = [...errors];
+    else {
+      this.cleanErrors();
+      this.update(formData);
+      event.target.reset();
+    }
+  }
+
+  validData(book: Book): string[] {
+    let result: string[] = [];
+    if (!book.title) result.push("Debe incluir el titulo");
+    if (book.title && book.title.length < 3) result.push("El titulo debe ser de minimo 3 caracteres");
+    if (!book.categoryId) result.push("El libro debe tener una categoria");
+    if (!book.authorId) result.push("El libro debe tener un autor");
     // demas validaciones
-    return null;
+    return result;
   }
 
   create(formData: FormData): void {
@@ -135,7 +169,8 @@ getCategory(id?: string): Category{
       this.resetCreate();
 
     }, (err: any) => {
-      console.log("fallo creacion", err);
+      console.warn("fallo creacion", err)
+      this.ErrorsCreate = err.errors.map((el: any) => el.message || el.msg);
     })
   }
 
@@ -144,23 +179,22 @@ getCategory(id?: string): Category{
     if (!id) return;
 
     let objectinList = this.ListBooks.find(el => el._id === id);
-    if(!objectinList) return console.log("no encontre el id:", id, objectinList);
 
     this.bookService.update(id, formData).subscribe((data: any) => {
       if (data.data) {
         let bookUpdated: Book = data.data as Book;
         let indexBook: number = this.ListBooks.findIndex((book: Book) => book._id === id);
-        if (indexBook === -1) return console.log("no se ncontro en update", id);
 
         this.ListBooks[indexBook] = bookUpdated;
         this.resetUpdate();
       }
     }, (err: any) => {
+      this.ErrorsUpdate = err.errors.map((el: any) => el.message || el.msg);
       console.warn("fallo update", err)
     })
   }
 
-  delete(): void {
+  deleteBook(): void {
     let id: string | undefined = this.BookUpdate._id;
     if (!id) return;
 
@@ -185,11 +219,57 @@ getCategory(id?: string): Category{
     this.BookUpdate = Object.assign({}, Book);
   }
 
+  setFavorite(id?: string){
+    if(!id) return alert("no id para añadir a favoritos")
+
+    this.bookService.setFavorite(id).subscribe((data: any)=>{
+      if(data.ok){
+        this.ListFavorites.push({bookId: id});
+        this.BookViewFavorite = true;
+        return console.log("se añadio con exito");
+      }
+      console.log("fallo la adicion a favoritos")
+    }, (err: any)=>{
+      console.log("fallo la adicion a favoritos", err);
+    })
+  }
+
+  removeFavorite(id?: string){
+    if(!id) return alert("no id para remover de favoritos")
+
+    this.BookViewFavorite = false;
+    this.bookService.removeFavorite(id).subscribe((data: any)=>{
+      if(data.ok){
+        return console.log("se removio con exito");
+      }
+      console.log("fallo la adicion a favoritos")
+    }, (err: any)=>{
+      console.log("fallo la adicion a favoritos", err);
+    })
+  }
+
+  loadView(id?: string): void {
+    if (!id) return;
+
+    let Book: Book | undefined = this.ListBooks.find((book: Book) => book._id === id);
+    if (!Book) return;
+
+    this.BookViewFavorite = this.ListFavorites.some((book: any)=> book.bookId === id);
+    console.log('libro favorito', this.BookViewFavorite)
+    this.BookView = Object.assign({}, Book);
+  }
+
   resetCreate() {
     this.BookCreate = new Book();
   }
+
   resetUpdate() {
     this.BookUpdate = new Book();
+  }
+
+  cleanErrors(){
+    this.ErrorsCreate = [];
+    this.ErrorsUpdate = [];
   }
 
 }

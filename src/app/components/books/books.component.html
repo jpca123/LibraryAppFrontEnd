@@ -1,63 +1,78 @@
 <h1 class="text-center fs-4 py-2 mb-2">Libros</h1>
 
 <section class="container-lg">
-  <p class="mx-a my-2">Añadir un libro <button class="btn btn-primary mx-1" data-bs-toggle="modal"
+  <p class="mx-a my-2 text-center">Añadir un libro <button class="btn btn-primary mx-1" data-bs-toggle="modal"
       data-bs-target="#modalCreate">Añadir</button></p>
 
 
-  <!-- Table of data -->
-  <table class="table mx-a table-striped">
-    <thead>
-      <tr>
-        <th>Titulo</th>
-        <th>Poster</th>
-        <th>Descripcion</th>
-        <th>Paginas</th>
-        <th>Author</th>
-        <th>Categoria</th>
-        <th>Libro</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let Book of ListBooks">
-        <td>{{Book.title}}</td>
+  <!-- dynamic-data -->
 
-        <td *ngIf="Book.poster; else noPoster"> <a href="{{Book.poster}}" target="_blank" rel="noopener noreferrer">Poster</a></td>
-        <ng-template #noPoster>
-        <td>N/A</td>
+  <div class="container-lg d-flex align-items-center justify-content-center flex-wrap">
 
-        </ng-template>
-        <td>{{Book.description || 'N/A'}}</td>
-        <td>{{Book.pages}}</td>
-        <td><a href="/authors?id={{Book.authorId}}">Ver Author</a></td>
-        <td>{{getCategory(Book.categoryId).category}}</td>
-
-        <td *ngIf="Book.document; else noDocument"><a href="{{Book.document}}" target="_blank" rel="noopener noreferrer">Ver Libro</a></td>
-        <ng-template #noDocument>
-          <td>N/A</td>
-        </ng-template>
-
-        <td class="d-flex justify-content-around flex-wrap">
-          <button class="btn btn-secondary my-1 mx-1" data-bs-toggle="modal" data-bs-target="#modalUpdate"
-            (click)="loadUpdate(Book._id)">Editar</button>
-          <button class="btn btn-danger my-1 mx-1" data-bs-toggle="modal" data-bs-target="#modalDelete"
-            (click)="loadUpdate(Book._id)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="container-sm" *ngIf="canLoadMore">
-    <button class="btn btn-primary" (click)="loadData()">Cargar mas</button>
+    <article *ngFor="let Book of ListBooks" class="card text-center mx-2 my-1 p-1" style="width: 18rem;">
+      <img *ngIf="Book.poster" src="{{Book.poster}}" class="card-img-top" alt="poster">
+      
+      <div class="card-body">
+        <h5 class="card-title">{{Book.title}}</h5>
+        <button data-bs-toggle="modal" data-bs-target="#modalView" (click)="loadView(Book._id)"
+          class="btn btn-primary mx-a">Ver</button>
+      </div>
+    </article>
   </div>
+
+  <div class="container-sm text-center my-2" *ngIf="canLoadMore">
+    <button class="btn btn-primary mx-a" (click)="loadData()">Cargar mas</button>
+  </div>
+
 </section>
+
+<!-- modal View -->
+<div class="modal modal-dark fade" id="modalView" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div enctype="multipart/form-data" name="update" class="modal-content" (ngSubmit)="onSubmitUpdate($event)">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="exampleModalLabel">Libro</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h3 class="text-center">{{BookView.title}}</h3>
+
+        <img *ngIf="BookView.poster" src="{{BookView.poster}}" alt="Poster libro">
+
+        <p *ngIf="BookView.description">{{BookView.description}}</p>
+        <p><strong>Escritor:</strong> {{getAuthor(BookView.authorId)}}</p>
+        <p><strong>Categoria:</strong> {{getCategory(BookView.categoryId)}}</p>
+        <p><strong>Paginas:</strong> {{BookView.pages}}</p>
+        <p>
+          <strong>Opciones:</strong>
+          <button (click)="loadUpdate(BookView._id)" data-bs-toggle="modal" data-bs-target="#modalUpdate"
+            class="btn btn-primary mx-1">Editar</button>
+          <button (click)="loadUpdate(BookView._id)" data-bs-toggle="modal" data-bs-target="#modalDelete"
+            class="btn btn-danger mx-1">Borrar</button>
+
+          <button *ngIf="!BookViewFavorite" (click)="setFavorite(BookView._id)" class="btn btn-primary mx-1">Marcar
+            Favorito</button>
+          <button *ngIf="BookViewFavorite" (click)="removeFavorite(BookView._id)"
+            class="btn btn-secondary mx-1">Desmarcar Favorito</button>
+        </p>
+
+        <p *ngIf="BookView.document" class="text-center">
+          <a target="_blank" href="{{BookView.document}}" class="btn btn-primary mx-a my-1">Documento</a>
+        </p>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <!-- modal create -->
-<div class="modal fade"  id="modalCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form enctype="multipart/form-data" name="create" class="modal-content"  (ngSubmit)="onSubmit($event)">
+    <form enctype="multipart/form-data" name="create" class="modal-content" (ngSubmit)="onSubmitCreate($event)">
       <div class="modal-header">
         <h2 class="modal-title fs-5" id="exampleModalLabel">Crear Libro</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -66,35 +81,41 @@
         <div class="form">
           <div class="form-group my-2">
             <label for="createTitle" class="form-label">Titulo</label>
-            <input type="text" [(ngModel)]="BookCreate.title" placeholder="Titulo..." maxlength="50" minlength="3" required name="title" id="createTitle" class="form-control">
+            <input type="text" [(ngModel)]="BookCreate.title" placeholder="Titulo..." maxlength="50" minlength="3"
+              required name="title" id="createTitle" class="form-control form-control-dark">
           </div>
 
           <div class="form-group my-2">
             <label for="createPoster" class="form-label">Poster</label>
-            <input type="file" accept="image/*" placeholder="Poster..." maxlength="50" minlength="3" required name="poster" id="createPoster" class="form-control">
+            <input type="file" accept="image/*" placeholder="Poster..." maxlength="50" minlength="3" required
+              name="poster" id="createPoster" class="form-control">
           </div>
 
           <div class="form-group my-2">
             <label for="createDocument" class="form-label">Documento</label>
-            <input type="file" placeholder="Documento..." accept="application/pdf" required name="document" id="createDocument" class="form-control">
+            <input type="file" placeholder="Documento..." accept="application/pdf" required name="document"
+              id="createDocument" class="form-control">
           </div>
 
           <div class="form-group my-2">
             <label for="createDescription" class="form-label">Descripcion</label>
-            <textarea name="description" class="form-control" [(ngModel)]="BookCreate.description" maxlength="150" id="createDescription" rows="5" placeholder="Descripcion"></textarea>
+            <textarea name="description" class="form-control" [(ngModel)]="BookCreate.description" maxlength="150"
+              id="createDescription" rows="5" placeholder="Descripcion"></textarea>
           </div>
 
           <div class="form-group my-2">
             <label for="createAuthorId" class="form-label">Author</label>
             <select class="form-select" [(ngModel)]="BookCreate.authorId" name="authorId" id="createAuthorId" required>
               <option disabled selected>Seleccione un author</option>
-              <option *ngFor="let Author of ListAuthors" value="{{Author._id}}">{{Author.name}} {{Author.lastName}}</option>
+              <option *ngFor="let Author of ListAuthors" value="{{Author._id}}">{{Author.name}} {{Author.lastName}}
+              </option>
             </select>
           </div>
 
           <div class="form-group my-2">
             <label for="createCategoryId" class="form-label">Categoria</label>
-            <select class="form-select" [(ngModel)]="BookCreate.categoryId" name="categoryId" id="createCategoryId" required>
+            <select class="form-select" [(ngModel)]="BookCreate.categoryId" name="categoryId" id="createCategoryId"
+              required>
               <option disabled selected>Seleccione una categoria</option>
               <option *ngFor="let Category of ListCategories" value="{{Category._id}}">{{Category.category}}</option>
             </select>
@@ -102,7 +123,18 @@
 
           <div class="form-group my-2">
             <label for="createPaginas" class="form-label">Pages</label>
-            <input type="number" [(ngModel)]="BookCreate.pages" placeholder="paginas..." max="10000" required name="pages" id="createPaginas" class="form-control">
+            <input type="number" [(ngModel)]="BookCreate.pages" placeholder="paginas..." max="10000" required
+              name="pages" id="createPaginas" class="form-control">
+          </div>
+
+          <!-- error messages of the form -->
+          <div *ngIf="ErrorsCreate.length > 0" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul>
+              <li *ngFor="let error of ErrorsCreate">
+                {{error}}
+              </li>
+            </ul>
+            <button type="button" class="btn-close" (click)="cleanErrors()" aria-label="Close"></button>
           </div>
 
         </div>
@@ -117,11 +149,10 @@
 </div>
 
 
-
 <!-- modal update -->
 <div class="modal fade" id="modalUpdate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-    <form enctype="multipart/form-data" name="update" class="modal-content"  (ngSubmit)="onSubmit($event)">
+    <form enctype="multipart/form-data" name="update" class="modal-content" (ngSubmit)="onSubmitUpdate($event)">
       <div class="modal-header">
         <h2 class="modal-title fs-5" id="exampleModalLabel">Editar Libro</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -130,35 +161,41 @@
         <div class="form">
           <div class="form-group my-2">
             <label for="updateTitle" class="form-label">Titulo</label>
-            <input type="text" [(ngModel)]="BookUpdate.title" placeholder="Titulo..." maxlength="50" minlength="3" required name="title" id="updateTitle" class="form-control">
+            <input type="text" [(ngModel)]="BookUpdate.title" placeholder="Titulo..." maxlength="50" minlength="3"
+              required name="title" id="updateTitle" class="form-control">
           </div>
 
           <div class="form-group my-2">
             <label for="updatePoster" class="form-label">Poster</label>
-            <input type="file"  accept="image/*" placeholder="Poster..." maxlength="50" minlength="3" required name="poster" id="updatePoster" class="form-control">
+            <input type="file" accept="image/*" placeholder="Poster..." maxlength="50" minlength="3" required
+              name="poster" id="updatePoster" class="form-control">
           </div>
 
           <div class="form-group my-2">
             <label for="updateDocument" class="form-label">Documento</label>
-            <input type="file" placeholder="Documento..." accept="application/pdf" required name="document" id="updateDocument" class="form-control">
+            <input type="file" placeholder="Documento..." accept="application/pdf" required name="document"
+              id="updateDocument" class="form-control">
           </div>
 
           <div class="form-group my-2">
             <label for="updateDescription" class="form-label">Descripcion</label>
-            <textarea name="description" class="form-control" [(ngModel)]="BookUpdate.description" maxlength="150" id="updateDescription" rows="5" placeholder="Descripcion"></textarea>
+            <textarea name="description" class="form-control" [(ngModel)]="BookUpdate.description" maxlength="150"
+              id="updateDescription" rows="5" placeholder="Descripcion"></textarea>
           </div>
 
           <div class="form-group my-2">
             <label for="updateAuthorId" class="form-label">Author</label>
             <select class="form-select" [(ngModel)]="BookUpdate.authorId" name="authorId" id="updateAuthorId" required>
               <option disabled selected>Seleccione un author</option>
-              <option *ngFor="let Author of ListAuthors" value="{{Author._id}}">{{Author.name}} {{Author.lastName}}</option>
+              <option *ngFor="let Author of ListAuthors" value="{{Author._id}}">{{Author.name}} {{Author.lastName}}
+              </option>
             </select>
           </div>
 
           <div class="form-group my-2">
             <label for="updateCategoryId" class="form-label">Categoria</label>
-            <select class="form-select" [(ngModel)]="BookUpdate.categoryId" name="categoryId" id="updateCategoryId" required>
+            <select class="form-select" [(ngModel)]="BookUpdate.categoryId" name="categoryId" id="updateCategoryId"
+              required>
               <option disabled selected>Seleccione una categoria</option>
               <option *ngFor="let Category of ListCategories" value="{{Category._id}}">{{Category.category}}</option>
             </select>
@@ -166,7 +203,18 @@
 
           <div class="form-group my-2">
             <label for="updatePaginas" class="form-label">Pages</label>
-            <input type="number" [(ngModel)]="BookUpdate.pages" placeholder="paginas..." max="10000" required name="pages" id="updatePaginas" class="form-control">
+            <input type="number" [(ngModel)]="BookUpdate.pages" placeholder="paginas..." max="10000" required
+              name="pages" id="updatePaginas" class="form-control">
+          </div>
+
+          <!-- error messages of the form -->
+          <div *ngIf="ErrorsUpdate.length > 0" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul>
+              <li *ngFor="let error of ErrorsUpdate">
+                {{error}}
+              </li>
+            </ul>
+            <button type="button" class="btn-close" (click)="cleanErrors()" aria-label="Close"></button>
           </div>
 
         </div>
@@ -195,7 +243,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-danger" (click)="delete()" data-bs-dismiss="modal">Eliminar</button>
+        <button type="button" class="btn btn-danger" (click)="deleteBook()" data-bs-dismiss="modal">Eliminar</button>
       </div>
     </div>
   </div>

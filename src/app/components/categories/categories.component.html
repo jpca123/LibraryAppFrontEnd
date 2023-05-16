@@ -3,14 +3,26 @@
 <section class="container">
   <div class="container-sm">
     <h3 class="text-center fs-2">Añadir Categoria</h3>
-        <div class="d-flex justify-content-center">
-            <input type="text" placeholder="Nombre" [(ngModel)]="CategoryCreate.category" name="category" minlength="3" maxlength="80" class="form-control mx-a">
-            <button class="btn btn-success btn-sm ms-2 my-1" (click)="create()">Crear</button>
-        </div>
+    <div class="d-flex justify-content-center">
+      <input type="text" placeholder="Nombre" [(ngModel)]="CategoryCreate.category" name="category" minlength="3"
+        maxlength="80" class="form-control mx-a">
+      <button class="btn btn-success btn-sm ms-2 my-1" (click)="create()">Crear</button>
+    </div>
+
+    <!-- error messages of the form -->
+    <div *ngIf="ErrorsCreate.length > 0" class="alert alert-danger alert-dismissible fade show" role="alert">
+      <ul>
+        <li *ngFor="let error of ErrorsCreate">
+          {{error}}
+        </li>
+      </ul>
+      <button type="button" class="btn-close" (click)="cleanErrors()" aria-label="Close"></button>
+    </div>
   </div>
 
 
   <!-- Table of data -->
+
   <table class="table mx-a table-striped">
     <thead>
       <tr>
@@ -35,7 +47,6 @@
     <button class="btn btn-primary my-2 mx-a d-block" (click)="loadData()">Cargar Mas</button>
   </div>
 
-  
 </section>
 
 <!-- modal edit -->
@@ -48,10 +59,21 @@
       </div>
       <div class="modal-body">
         <form class="form">
-            <div class="d-flex">
-                <input type="text" placeholder="Nombre" name="category" [(ngModel)]="CategoryUpdate.category" class="form-control mx-a my-1">
-            </div>
+          <div class="d-flex">
+            <input type="text" placeholder="Nombre" name="category" [(ngModel)]="CategoryUpdate.category"
+              class="form-control mx-a my-1">
+          </div>
         </form>
+
+        <!-- error messages of the form -->
+        <div *ngIf="ErrorsUpdate.length > 0" class="alert alert-danger alert-dismissible fade show" role="alert">
+          <ul>
+            <li *ngFor="let error of ErrorsCreate">
+              {{error}}
+            </li>
+          </ul>
+          <button type="button" class="btn-close" (click)="cleanErrors()" aria-label="Close"></button>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

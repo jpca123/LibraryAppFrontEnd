@@ -1,6 +1,6 @@
 /* Custom properties */
 :root{
-    --primary-color: rgb(16, 26, 39);
+    --primary-color: rgb(19, 50, 92);
 }
 
 
@@ -10,9 +10,16 @@ body{
     min-height: 100vh;
 }
 main{
-    min-height: calc(100vh - 3em);
+    min-height: calc(100vh - 8em);
 }
 
 header, footer{
     background-color: var(--primary-color);
+}
+
+.modal img, .card img{
+    display: block;
+    max-width: 30vw;
+    max-height: 40vh;
+    margin: auto;
 }

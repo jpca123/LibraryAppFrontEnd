@@ -13,6 +13,9 @@ export class AuthorsComponent implements OnInit {
 
   title: string = "Autores";
   ListAuthors: Author[] = [];
+  ErrorsCreate: string[] = [];
+  ErrorsUpdate: string[] = [];
+
   private limit: number = 5;
   private page: number = 1;
   private cuantity: number = this.limit * 2;
@@ -35,7 +38,7 @@ export class AuthorsComponent implements OnInit {
       if (data.data) this.ListAuthors = this.ListAuthors.concat(data.data);
       if (data.paginator) this.cuantity = data.paginator.cuantity;
 
-      this.page += 1;
+      if(data.ok) this.page += 1;
       this.canLoadMore = this.cuantity > (this.limit * (this.page - 1));
       console.log(data, this)
 
@@ -53,6 +56,7 @@ export class AuthorsComponent implements OnInit {
       this.AuthorCreate = new Author();
     }, (err: any) => {
       console.warn("fallo la creacion", err);
+      this.ErrorsCreate = err.errors.map((el: any)=> el.message || el.msg);
     })
   }
 
@@ -78,7 +82,7 @@ export class AuthorsComponent implements OnInit {
       }
     }, (err: any) => {
       this.AuthorUpdate = new Author();
-      console.log("fallo la edicion", err);
+      this.ErrorsCreate = err.errors.map((el: any)=> el.message || el.msg);
     })
   }
 
@@ -106,4 +110,8 @@ export class AuthorsComponent implements OnInit {
     this.AuthorUpdate = Object.assign({}, object);
   }
 
+  cleanErrors(){
+    this.ErrorsCreate = [];
+    this.ErrorsUpdate = [];
+  }
 }

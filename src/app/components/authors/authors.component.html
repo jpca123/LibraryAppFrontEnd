@@ -29,11 +29,13 @@
       </tr>
     </tbody>
   </table>
+
+  <div class="container-sm text-center">
+    <button class="btn btn-primary" *ngIf="canLoadMore" (click)="loadData()">Cargar más</button>
+  </div>
+
 </section>
 
-<div class="container-sm text-center">
-  <button class="btn btn-primary" *ngIf="canLoadMore" (click)="loadData()">Cargar más</button>
-</div>
 
 <!-- modal create -->
 <div class="modal fade" id="modalCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -53,14 +55,25 @@
 
           <div class="form-group my-2">
             <label for="crearLastName" class="form-label">lastName</label>
-            <input type="text" [(ngModel)]="AuthorCreate.lastName" placeholder="Apellido..." maxlength="80" minlength="3"
-              required name="lastName" id="crearLastName" class="form-control">
+            <input type="text" [(ngModel)]="AuthorCreate.lastName" placeholder="Apellido..." maxlength="80"
+              minlength="3" required name="lastName" id="crearLastName" class="form-control">
           </div>
 
-          
+
           <div class="form-group my-2">
             <label for="crearCountry" class="form-label">País</label>
-            <input type="text" [(ngModel)]="AuthorCreate.country" placeholder="Pais..." maxlength="80" minlength="3" required name="country" id="crearCountry" class="form-control">
+            <input type="text" [(ngModel)]="AuthorCreate.country" placeholder="Pais..." maxlength="80" minlength="3"
+              required name="country" id="crearCountry" class="form-control">
+          </div>
+
+          <!-- error messages of the form -->
+          <div *ngIf="ErrorsCreate.length > 0" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul>
+              <li *ngFor="let error of ErrorsCreate">
+                {{error}}
+              </li>
+            </ul>
+            <button type="button" class="btn-close" (click)="cleanErrors()" aria-label="Close"></button>
           </div>
 
         </div>
@@ -85,25 +98,36 @@
       </div>
       <div class="modal-body">
         <div class="form">
-            <div class="form-group my-2">
-              <label for="updateName" class="form-label">Nombre</label>
-              <input type="text" [(ngModel)]="AuthorUpdate.name" placeholder="Nombre..." maxlength="80" minlength="3"
-                required name="title" id="updateName" class="form-control">
-            </div>
-  
-            <div class="form-group my-2">
-              <label for="updateLastName" class="form-label">lastName</label>
-              <input type="text" [(ngModel)]="AuthorUpdate.lastName" placeholder="Apellido..." maxlength="80" minlength="3"
-                required name="lastName" id="updateLastName" class="form-control">
-            </div>
-  
-            
-            <div class="form-group my-2">
-              <label for="updateCountry" class="form-label">País</label>
-              <input type="text" [(ngModel)]="AuthorUpdate.country" placeholder="Pais..." maxlength="80" minlength="3" required name="country" id="updateCountry" class="form-control">
-            </div>
-  
+          <div class="form-group my-2">
+            <label for="updateName" class="form-label">Nombre</label>
+            <input type="text" [(ngModel)]="AuthorUpdate.name" placeholder="Nombre..." maxlength="80" minlength="3"
+              required name="title" id="updateName" class="form-control">
           </div>
+
+          <div class="form-group my-2">
+            <label for="updateLastName" class="form-label">lastName</label>
+            <input type="text" [(ngModel)]="AuthorUpdate.lastName" placeholder="Apellido..." maxlength="80"
+              minlength="3" required name="lastName" id="updateLastName" class="form-control">
+          </div>
+
+
+          <div class="form-group my-2">
+            <label for="updateCountry" class="form-label">País</label>
+            <input type="text" [(ngModel)]="AuthorUpdate.country" placeholder="Pais..." maxlength="80" minlength="3"
+              required name="country" id="updateCountry" class="form-control">
+          </div>
+
+          <!-- error messages of the form -->
+          <div *ngIf="ErrorsUpdate.length > 0" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul>
+              <li *ngFor="let error of ErrorsUpdate">
+                {{error}}
+              </li>
+            </ul>
+            <button type="button" class="btn-close" (click)="cleanErrors()" aria-label="Close"></button>
+          </div>
+
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

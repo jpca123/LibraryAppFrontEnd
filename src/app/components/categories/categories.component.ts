@@ -12,7 +12,9 @@ export class CategoriesComponent implements OnInit {
 
   private categoryService: CategoryService;
   ListCategories: Category[] = [];
-
+  ErrorsCreate: string[] = [];
+  ErrorsUpdate: string[] = [];
+  
   private page: number = 1; 
   private limit: number = 5; 
   private cuantity: number = this.limit * 2; 
@@ -37,7 +39,7 @@ export class CategoriesComponent implements OnInit {
       console.log(data)
       this.canLoadMore = this.cuantity > (this.limit * (this.page - 1) );
       console.log(this)
-      this.page += 1;
+      if(data.ok) this.page += 1;
 
     }, (err: any)=>{
       console.warn("fallo la carga de categorias", err)
@@ -130,5 +132,9 @@ export class CategoriesComponent implements OnInit {
   resetCreate(){
     this.CategoryCreate = new Category();
   }
-
+  
+  cleanErrors(){
+    this.ErrorsCreate = [];
+    this.ErrorsUpdate = [];
+  }
 }

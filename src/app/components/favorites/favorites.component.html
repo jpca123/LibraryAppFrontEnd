@@ -1,0 +1,26 @@
+<h1 class="text-center fs-4 py-2 mb-2">Libros Favoritos</h1>
+
+<section class="container-lg">
+
+    <table class="table table-striped text-white">
+        <thead>
+            <tr>
+                <td>Libro</td>
+                <td>Acciones</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let book of listBooks">
+                <td>{{book.title}}</td>
+                <td class="text-center">
+                    <a *ngIf="book.document" href="{{book.document}}" target="_blank" class="btn btn-primary">Leer</a>
+                    <button (click)="remove(book._id)" class="btn btn-danger ms-2">Borrar</button>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+    <p *ngIf="canLoadMore" class="text-center"><button (click)="loadData()" class="btn btn-primary">Cargar Más</button>
+    </p>
+
+</section>

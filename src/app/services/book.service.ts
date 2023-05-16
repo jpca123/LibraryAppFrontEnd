@@ -10,6 +10,7 @@ import { SecurityService } from './security.service';
 })
 export class BookService {
   url: string = `${environment.urlBackEnd}/books`;
+  urlFavorites: string = `${environment.urlBackEnd}/users/books`;
   private http: HttpClient;
   private securityService: SecurityService
 
@@ -51,9 +52,22 @@ export class BookService {
     return this.http.get(`${this.url}/author/${author}?page=${page}&limit=${limit}`, {headers});
   }
 
+  getFavorites(page?: number, limit?: number): Observable<Book>{
+    if(!page) page = 1;
+    if(!limit) limit = 20;
+
+    let headers: HttpHeaders = this.securityService.getHeadersRequest(true);
+    return this.http.get(this.urlFavorites, {headers});
+  }
+
   get(id: string): Observable<Book> {
     let headers: HttpHeaders = this.securityService.getHeadersRequest();
     return this.http.get(`${this.url}/${id}`, {headers});
+  }
+
+  setFavorite(idBook: string): Observable<Book>{
+    let headers: HttpHeaders = this.securityService.getHeadersRequest(true);
+    return this.http.post(this.urlFavorites, {"bookId": idBook}, {headers})
   }
 
   create(formData: FormData): Observable<Book> {
@@ -70,6 +84,11 @@ export class BookService {
       "authorization": `Bearer ${this.securityService.getToken() || ""}`,
     });
     return this.http.put(`${this.url}/${id}`, formData, {headers});
+  }
+
+  removeFavorite(id: string): Observable<Object>{
+    let headers: HttpHeaders = this.securityService.getHeadersRequest(true);
+    return this.http.delete(`${this.urlFavorites}/${id}`, {headers})
   }
 
   delete(id: string): Observable<Object> {
