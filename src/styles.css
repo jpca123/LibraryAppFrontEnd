@@ -1,13 +1,33 @@
 /* Custom properties */
 :root{
-    --primary-color: rgb(19, 50, 92);
+    --primary-color: rgb(7 39 73);
+    --bg-ligth: rgb(239 239 239);
 }
 
 
 /* Reset */
 
+.card, .modal-content{
+    background-color: var(--bg-ligth);
+}
+body .form-control,
+body .form-control:focus,
+body .form-select{
+    background-color: transparent;
+}
+
+.nav-link{
+    color: #eee;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active{
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
 body{
     min-height: 100vh;
+    background-color: var(--bg-ligth);
 }
 main{
     min-height: calc(100vh - 8em);
@@ -22,4 +42,7 @@ header, footer{
     max-width: 30vw;
     max-height: 40vh;
     margin: auto;
+}
+.form-controll, .form-controll:focus{
+    background-color: unset;
 }

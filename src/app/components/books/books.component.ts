@@ -39,7 +39,7 @@ export class BooksComponent implements OnInit {
     private elRef: ElementRef,
     bookServ: BookService,
     categoryServ: CategoryService,
-    authorServ: AuthorService
+    authorServ: AuthorService,
   ) {
     this.categoryService = categoryServ;
     this.authorService = authorServ;
@@ -77,6 +77,7 @@ export class BooksComponent implements OnInit {
 
   loadData() {
     this.bookService.getAll(this.page, this.limit).subscribe((data: any) => {
+      console.log(data)
       if (data.data) this.ListBooks = this.ListBooks.concat(data.data);
 
       if (data.paginator) this.cuantity = data.paginator.cuantity;
@@ -170,7 +171,7 @@ export class BooksComponent implements OnInit {
 
     }, (err: any) => {
       console.warn("fallo creacion", err)
-      this.ErrorsCreate = err.errors.map((el: any) => el.message || el.msg);
+      this.ErrorsCreate = err.error.errors.map((el: any) => el.message || el.msg);
     })
   }
 
@@ -189,7 +190,7 @@ export class BooksComponent implements OnInit {
         this.resetUpdate();
       }
     }, (err: any) => {
-      this.ErrorsUpdate = err.errors.map((el: any) => el.message || el.msg);
+      this.ErrorsUpdate = err.error.errors.map((el: any) => el.message || el.msg);
       console.warn("fallo update", err)
     })
   }

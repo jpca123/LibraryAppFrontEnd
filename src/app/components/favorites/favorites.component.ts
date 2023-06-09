@@ -40,6 +40,7 @@ export class FavoritesComponent implements OnInit {
             if(data.ok) this.listBooks.push(data.data);
             else console.log('fallo get', data.errors);
           })
+          // this.page += 1;
 
         }, (err: any)=>{
           console.log('fallo get', err);
@@ -47,7 +48,7 @@ export class FavoritesComponent implements OnInit {
       }
 
       if (data.paginator) this.cuantity = data.paginator.cuantity;
-      this.canLoadMore = this.cuantity > (this.limit * this.page);
+      this.canLoadMore = this.cuantity > (this.limit * this.page - 1);
       if(data.ok) this.page += 1;
     }, (err: any) => {
       console.warn("Fallo loadData", err)

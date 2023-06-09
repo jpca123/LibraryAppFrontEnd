@@ -1,12 +1,22 @@
 <h1 class="text-center fs-4 py-2 mb-2">Categorias</h1>
 
+<!-- error messages -->
+<div *ngIf="ErrorsUser.length > 0" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <ul>
+    <li *ngFor="let error of ErrorsUser">
+      {{error}}
+    </li>
+  </ul>
+  <button type="button" class="btn-close" (click)="cleanErrors()" aria-label="Close"></button>
+</div>
+
 <section class="container">
   <div class="container-sm">
     <h3 class="text-center fs-2">Añadir Categoria</h3>
     <div class="d-flex justify-content-center">
       <input type="text" placeholder="Nombre" [(ngModel)]="CategoryCreate.category" name="category" minlength="3"
         maxlength="80" class="form-control mx-a">
-      <button class="btn btn-success btn-sm ms-2 my-1" (click)="create()">Crear</button>
+      <button class="btn btn-success ms-2 my-1" (click)="create()">Crear</button>
     </div>
 
     <!-- error messages of the form -->

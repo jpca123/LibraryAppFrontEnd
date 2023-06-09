@@ -15,6 +15,7 @@ export class AuthorsComponent implements OnInit {
   ListAuthors: Author[] = [];
   ErrorsCreate: string[] = [];
   ErrorsUpdate: string[] = [];
+  ErrorsUser: string[] = []
 
   private limit: number = 5;
   private page: number = 1;
@@ -98,6 +99,7 @@ export class AuthorsComponent implements OnInit {
       this.AuthorUpdate = new Author();
     }, (err: any) => {
       console.log("fallo la eliminacion", err);
+      this.ErrorsUser = err.error.errors.map((error: any) => error.message);
     });
   }
 
@@ -113,5 +115,6 @@ export class AuthorsComponent implements OnInit {
   cleanErrors(){
     this.ErrorsCreate = [];
     this.ErrorsUpdate = [];
+    this.ErrorsUser = [];
   }
 }

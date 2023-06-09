@@ -23,13 +23,13 @@
           <a class="nav-link" href="/categories">Categorias</a>
         </li>
         <li *ngIf="!session" class="nav-item">
-          <a class="nav-link" href="/register">Registro</a>
+          <a class="nav-link btn btn-secondary me-md-2" href="/register">Registro</a>
         </li>
         <li *ngIf="!session" class="nav-item">
-          <a class="nav-link" href="/login">Iniciar sesion</a>
+          <a class="nav-link btn btn-success" href="/login">Iniciar sesion</a>
         </li>
         <li *ngIf="session" class="nav-item">
-          <a class="nav-link" href="#" (click)="logout()">Cerrar sesion</a>
+          <a class="nav-link btn btn-secondary" href="#" (click)="logout()">Cerrar sesion</a>
         </li>
       </ul>
     </div>

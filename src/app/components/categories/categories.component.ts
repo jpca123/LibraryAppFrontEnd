@@ -14,6 +14,7 @@ export class CategoriesComponent implements OnInit {
   ListCategories: Category[] = [];
   ErrorsCreate: string[] = [];
   ErrorsUpdate: string[] = [];
+  ErrorsUser: string[] = [];
   
   private page: number = 1; 
   private limit: number = 5; 
@@ -38,7 +39,6 @@ export class CategoriesComponent implements OnInit {
       if(data.paginator) this.cuantity = data.paginator.cuantity || 5;
       console.log(data)
       this.canLoadMore = this.cuantity > (this.limit * (this.page - 1) );
-      console.log(this)
       if(data.ok) this.page += 1;
 
     }, (err: any)=>{
@@ -104,6 +104,7 @@ export class CategoriesComponent implements OnInit {
         else alert("Fallo la eliminacion");
       }, (err: any)=>{
         console.warn("fallo Eliminacion", err);
+        this.ErrorsUser = err.error.errors.map((el: any) => el.message);
       })
 
   }
@@ -136,5 +137,6 @@ export class CategoriesComponent implements OnInit {
   cleanErrors(){
     this.ErrorsCreate = [];
     this.ErrorsUpdate = [];
+    this.ErrorsUser = [];
   }
 }

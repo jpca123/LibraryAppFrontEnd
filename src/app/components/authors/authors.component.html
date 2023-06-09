@@ -1,5 +1,15 @@
 <h1 class="text-center fs-4 py-2 mb-2">Autores</h1>
 
+<!-- error messages -->
+<div *ngIf="ErrorsUser.length > 0" class="alert alert-danger alert-dismissible fade show" role="alert">
+  <ul>
+    <li *ngFor="let error of ErrorsUser">
+      {{error}}
+    </li>
+  </ul>
+  <button type="button" class="btn-close" (click)="cleanErrors()" aria-label="Close"></button>
+</div>
+
 <section class="container-lg">
   <p class="mx-a my-2">Añadir un autor <button class="btn btn-primary mx-1" data-bs-toggle="modal"
       data-bs-target="#modalCreate">Añadir</button></p>
@@ -22,7 +32,7 @@
         <td>{{Author.country}}</td>
         <td class="d-flex justify-content-around flex-wrap">
           <button class="btn btn-secondary my-1 mx-1" data-bs-toggle="modal" data-bs-target="#modalupdate"
-            (click)="loadUpdate(Author._id)" data-id="{{Author._id}}">editar</button>
+            (click)="loadUpdate(Author._id)" data-id="{{Author._id}}">Editar</button>
           <button class="btn btn-danger my-1 mx-1" data-bs-toggle="modal" data-bs-target="#modalDelete"
             (click)="loadUpdate(Author._id)" data-id="{{Author._id}}">Eliminar</button>
         </td>

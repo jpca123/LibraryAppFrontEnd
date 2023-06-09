@@ -10,7 +10,7 @@
   <div class="container-lg d-flex align-items-center justify-content-center flex-wrap">
 
     <article *ngFor="let Book of ListBooks" class="card text-center mx-2 my-1 p-1" style="width: 18rem;">
-      <img *ngIf="Book.poster" src="{{Book.poster}}" class="card-img-top" alt="poster">
+      <img *ngIf="Book.poster" src="{{(Book.poster)}}" class="card-img-top" alt="poster">
       
       <div class="card-body">
         <h5 class="card-title">{{Book.title}}</h5>
