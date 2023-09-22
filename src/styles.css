@@ -2,19 +2,27 @@
 :root{
     --primary-color: rgb(7 39 73);
     --bg-ligth: rgb(239 239 239);
+    --bg-dark: rgb(23, 26, 31);
+    --color-dark: rgb(214, 214, 214);
 }
 
 
 /* Reset */
 
-.card, .modal-content{
-    background-color: var(--bg-ligth);
-}
 body .form-control,
+body .card,
+body .modal-content,
 body .form-control:focus,
+body .table,
 body .form-select{
-    background-color: transparent;
+    background-color: var(--bg-dark);
+    border-color: #4f4f4f;
+    color: var(--color-dark);
 }
+
+/* body:is(.card .modal-content .form-control .form-control:focus .form-select){
+    background-color: var(--bg-ligth);
+} */
 
 header .nav-link{
     color: #eee;
@@ -25,16 +33,24 @@ header .nav-link{
     border-color: var(--primary-color);
 }
 
-body{
+body, app-root{
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
-    background-color: var(--bg-ligth);
+    background-color: var(--bg-dark);
+    color: var(--color-dark);
 }
 main{
-    min-height: calc(100vh - 8em);
+    flex-grow: 1;
+    padding: 1em;
 }
 
 header, footer{
     background-color: var(--primary-color);
+}
+
+footer{
+    padding: 1em 2em;
 }
 
 .modal img, .card img{
