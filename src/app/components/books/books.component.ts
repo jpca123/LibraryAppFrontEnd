@@ -173,7 +173,10 @@ export class BooksComponent implements OnInit {
 
   create(formData: FormData): void {
     this.bookService.create(formData).subscribe((data: any) => {
-      if (data.data) this.ListBooks.push(data.data);
+      if (data.data) {
+        this.ListBooks.push(data.data);
+        this.InfoCreateEmitter.emit({type: ShowInfoTypes.SUCCESS, data: ["Se creo libro con exito"]});
+      }
       this.resetCreate();
 
     }, (err: any) => {
@@ -195,6 +198,7 @@ export class BooksComponent implements OnInit {
 
         this.ListBooks[indexBook] = bookUpdated;
         this.resetUpdate();
+        this.InfoUpdateEmitter.emit({type: ShowInfoTypes.SUCCESS, data: ["Se actualizo con exito"]});
       }
     }, (err: any) => {
       this.InfoUpdateEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
@@ -212,6 +216,7 @@ export class BooksComponent implements OnInit {
         if (indexBook === -1) return console.warn("no se encontro delete", id);
         this.ListBooks.splice(indexBook, 1);
         this.resetUpdate();
+        this.InfoGeneralEmitter.emit({type: ShowInfoTypes.SUCCESS, data: ["Se elimino con exito"]});
       }
     }, (err: any) => {
       console.warn("fallo eliminacion", err);

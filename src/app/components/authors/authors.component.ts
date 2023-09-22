@@ -55,7 +55,10 @@ export class AuthorsComponent implements OnInit {
     object._id = `${this.ListAuthors.length}`;
 
     this.authorService.create(this.AuthorCreate).subscribe((data: any) => {
-      if (data.data) this.ListAuthors.push(data.data);
+      if (data.data) {
+        this.ListAuthors.push(data.data);
+        this.InfoCreateEmitter.emit({type: ShowInfoTypes.SUCCESS, data: ["Se creo autor con exito"]});
+      }
       this.AuthorCreate = new Author();
     }, (err: any) => {
       console.warn("fallo la creacion", err);
@@ -79,6 +82,8 @@ export class AuthorsComponent implements OnInit {
 
         this.ListAuthors[indexObject] = data.data;
         this.AuthorUpdate = new Author();
+
+        this.InfoUpdateEmitter.emit({type: ShowInfoTypes.SUCCESS, data: ["Se actualizo con exito"]});
       }
     }, (err: any) => {
       this.AuthorUpdate = new Author();
@@ -94,7 +99,10 @@ export class AuthorsComponent implements OnInit {
     if (indexObject === -1) return;
 
     this.authorService.delete(id).subscribe((data: any) => {
-      if (data.ok) this.ListAuthors.splice(indexObject, 1);
+      if (data.ok) {
+        this.ListAuthors.splice(indexObject, 1);
+        this.InfoUpdateEmitter.emit({type: ShowInfoTypes.SUCCESS, data: ["Se elimino con exito"]});
+      }
       this.AuthorUpdate = new Author();
     }, (err: any) => {
       console.log("fallo la eliminacion", err);

@@ -1,8 +1,8 @@
 <h1 class="text-center fs-4 py-2 mb-2">Libros Favoritos</h1>
 
-<section class="container-lg">
+<section *ngIf="listBooks.length > 0; else add" class="container-lg">
 
-    <table class="table table-striped">
+    <table class="table">
         <thead>
             <tr>
                 <th>Libro</th>
@@ -24,3 +24,9 @@
     </p>
 
 </section>
+
+<ng-template #add>
+    <div class="container-sm text-center p-2 my-3">
+        <p>por ahora no tienes libro favoritos, asegurate de agregarlos <a href="/books" class="btn btn-primary px-2">Aquí</a></p>
+    </div>
+</ng-template>

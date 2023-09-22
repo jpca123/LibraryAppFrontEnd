@@ -48,6 +48,7 @@ export class MyComponent implements OnInit {
     this.userService.update(this.userUpdate).subscribe((data: any)=>{
       if(data.ok){
         this.getData();
+        this.InfoUserEmitter.emit({type: ShowInfoTypes.SUCCESS, data: ["Se actualizo con exito"]});
       }else this.InfoUserEmitter.emit({type: ShowInfoTypes.ERROR, data: ["Fallo la actualización de la informacíon"]})
     }, (err: any)=>{
       console.warn("fallo update", err);

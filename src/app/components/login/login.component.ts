@@ -11,7 +11,6 @@ import { SecurityService } from 'src/app/services/security.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  title = "Login - Ingresa a tu perfil";
   user: UserLogin = {};
   InfoLoginEmitter = new EventEmitter<{type: ShowInfoTypes, data: any}>(); 
 
@@ -33,6 +32,7 @@ export class LoginComponent implements OnInit {
     this.securityService.login(this.user.userName!, this.user.password!).subscribe((data: any) =>{
       if(data.ok){
         let token: string = data.token as string;
+        this.InfoLoginEmitter.emit({type: ShowInfoTypes.SUCCESS, data: ["Inicio de sesion exitoso, espere un momento..."]});
         this.securityService.createSession(token);
         this.router.navigate(["/"]);
       }else this.InfoLoginEmitter.emit({type: ShowInfoTypes.ERROR, data: ["Falló la petición"]});

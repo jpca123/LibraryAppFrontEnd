@@ -63,9 +63,14 @@ export class CategoriesComponent implements OnInit {
 
   create(): void {
       this.categoryService.create(this.CategoryCreate).subscribe((data: any)=>{
-        let objectCreate: Category = data.data as Category;
-        this.ListCategories.push(objectCreate);
-        this.CategoryCreate = new Category();
+        if(data.ok){
+          let objectCreate: Category = data.data as Category;
+          this.ListCategories.push(objectCreate);
+          this.CategoryCreate = new Category();
+          this.InfoCreateEmitter.emit({type: ShowInfoTypes.SUCCESS, data: ["Se creo categoria con exito"]});
+        }else{
+          this.InfoCreateEmitter.emit({type: ShowInfoTypes.ERROR, data: ["Falló la creacion"]});
+        }
       }, (err: any)=>{
         console.warn("fallo creacion", err);
         this.InfoCreateEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
@@ -81,11 +86,16 @@ export class CategoriesComponent implements OnInit {
 
       
       this.categoryService.update(id, this.CategoryUpdate).subscribe((data: any)=>{
-        let objectUpdated: Category = data.data as Category;
-        let indexObject: number = this.ListCategories.indexOf(objectInList!);
-        this.ListCategories[indexObject] = objectUpdated;
-
-        this.CategoryUpdate = new Category();
+        if(data.ok){
+          let objectUpdated: Category = data.data as Category;
+          let indexObject: number = this.ListCategories.indexOf(objectInList!);
+          this.ListCategories[indexObject] = objectUpdated;
+  
+          this.CategoryUpdate = new Category();
+          this.InfoUpdateEmitter.emit({type: ShowInfoTypes.SUCCESS, data: ["Se actualizo con exito"]});
+        }else{
+          this.InfoUpdateEmitter.emit({type: ShowInfoTypes.ERROR, data: ["Falló la actualización"]});
+        }
       }, (err: any)=>{
         this.InfoUpdateEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
         console.warn("fallo edicion", err);
@@ -101,9 +111,10 @@ export class CategoriesComponent implements OnInit {
       if(indeObject === -1) return;
 
       this.categoryService.delete(id).subscribe((data: any)=>{
-        if(data.data){
+        if(data.ok){
           this.ListCategories.splice(indeObject, 1);
           this.CategoryUpdate = new Category();
+          this.InfoUserEmitter.emit({type: ShowInfoTypes.SUCCESS, data: ["Se elimino con exito"]});
         }
       }, (err: any)=>{
         console.warn("fallo Eliminacion", err);

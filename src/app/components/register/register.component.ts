@@ -32,7 +32,10 @@ export class RegisterComponent implements OnInit {
 
     this.securityService.register(this.user).subscribe((data: any) =>{
       console.log({data})
-      if(data.ok)  this.router.navigate(["/login"]);
+      if(data.ok) {
+        this.router.navigate(["/login"]);
+        this.InfoRegisterEmitter.emit({type: ShowInfoTypes.SUCCESS, data: ["Se registro con exito, espere un momento..."]});
+      }
       else this.InfoRegisterEmitter.emit({type: ShowInfoTypes.ERROR, data: ["No se pudo realizar el registro"]});
     }, 
     (err: any)=>{
