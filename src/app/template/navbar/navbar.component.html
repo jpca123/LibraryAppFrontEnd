@@ -22,15 +22,18 @@
         <li *ngIf="session" class="nav-item">
           <a class="nav-link" href="/categories">Categorias</a>
         </li>
+
+        <li *ngIf="session" class="nav-item px-1">
+          <a class="nav-link user_link" href="/my" title="cuenta"></a>
+        </li>
+
         <li *ngIf="!session" class="nav-item">
-          <a class="nav-link btn btn-secondary me-md-2" href="/register">Registro</a>
+          <a class="nav-link btn btn-primary  mx-1" href="/login">Iniciar sesion</a>
         </li>
         <li *ngIf="!session" class="nav-item">
-          <a class="nav-link btn btn-success" href="/login">Iniciar sesion</a>
+          <a class="nav-link btn btn-success mx-1" href="/login">Registrarse</a>
         </li>
-        <li *ngIf="session" class="nav-item">
-          <a class="nav-link btn btn-secondary" href="#" (click)="logout()">Cerrar sesion</a>
-        </li>
+
       </ul>
     </div>
   </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ShowInfoTypes } from 'src/app/models/types';
 
@@ -24,13 +24,15 @@ export class ShowInfoComponent implements OnInit, OnDestroy {
     this.listener$ = this.InfoEmitter.subscribe((data: any) => this.show(data.type, data.data) , console.warn)
   }
 
-  show<T>(type: ShowInfoTypes, info: any){
-    if(info instanceof Array){
-      return this.showInfo(type, info as string[]);
-    }else{
+  show(type: ShowInfoTypes, info: any){
+
+    if(info.error){
       let infoParsed: string[] = info.error.errors.map(
         (el: {error: string, message: string}) => `${el.error||"Error"}: ${el.message || "Unknow Error"}`);
-      return this.showInfo(type, infoParsed)
+      return this.showInfo(type, infoParsed);
+
+    }else{
+      return this.showInfo(type, info as string[]);
     }
   }
 
@@ -39,7 +41,6 @@ export class ShowInfoComponent implements OnInit, OnDestroy {
     this.classTypeInfo = type;
     this.Info = info;
     this.Visible = true;
-    console.log({type: this.classTypeInfo})
   }
 
   cleanInfo(){

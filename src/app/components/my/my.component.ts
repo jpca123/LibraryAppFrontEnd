@@ -34,10 +34,10 @@ export class MyComponent implements OnInit {
         this.user = data.data;
         this.userUpdate = data.data
       }
-      else this.InfoUserEmitter.emit({type: ShowInfoTypes.ERROR, data: ["fallo la obtencion del usuario"]})
+      else this.InfoGeneralEmitter.emit({type: ShowInfoTypes.ERROR, data: ["fallo la obtencion del usuario"]})
     }, (err: any)=>{
       console.warn("fallo getData", err);
-      this.InfoUserEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
+      this.InfoGeneralEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     })
   }
 

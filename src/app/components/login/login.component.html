@@ -1,7 +1,7 @@
 <div class="container">
     <h1 class="text-center fs-4 my-2">Login</h1>
 
-    <div class="form container-md">
+    <div class="form container-sm">
         <section class="form-group my-2">
             <label for="userName" class="form-label">Nombre de usuario</label>
             <input type="text" [(ngModel)]="user.userName" name="userName" placeholder="Nombre de usuario" id="userName" class="form-control">
@@ -22,7 +22,10 @@
             <button class="my-2 mx-a btn btn-secondary" (click)="reset()" type="button">Limpiar</button>
         </section>
 
+        <div class="d-flex align-items-center justify-content-around flex-wrap mt-3 p-1">
 
-        <a href="/forgot_password" class="link my-2">¿Olvidaste tu Contraseña?</a>
+            <a href="/forgot_password" class="link m-1">¿Olvidaste tu Contraseña?</a>
+            <a href="/register" class="link m-1">¿Ya tienes una cuenta? iniciar session</a>
+        </div>
     </div>
 </div>
