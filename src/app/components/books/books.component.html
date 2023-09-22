@@ -3,6 +3,9 @@
 <section class="container-lg">
   <p class="mx-a my-2 text-center">Añadir un libro <button class="btn btn-primary mx-1" data-bs-toggle="modal"
       data-bs-target="#modalCreate">Añadir</button></p>
+    
+  <!-- Errors general -->
+  <app-show-info [InfoEmitter]="InfoGeneralEmitter"></app-show-info>
 
 
   <!-- dynamic-data -->
@@ -128,14 +131,7 @@
           </div>
 
           <!-- error messages of the form -->
-          <div *ngIf="ErrorsCreate.length > 0" class="alert alert-danger alert-dismissible fade show" role="alert">
-            <ul>
-              <li *ngFor="let error of ErrorsCreate">
-                {{error}}
-              </li>
-            </ul>
-            <button type="button" class="btn-close" (click)="cleanErrors()" aria-label="Close"></button>
-          </div>
+          <app-show-info [InfoEmitter]="InfoCreateEmitter"></app-show-info>
 
         </div>
       </div>
@@ -208,14 +204,7 @@
           </div>
 
           <!-- error messages of the form -->
-          <div *ngIf="ErrorsUpdate.length > 0" class="alert alert-danger alert-dismissible fade show" role="alert">
-            <ul>
-              <li *ngFor="let error of ErrorsUpdate">
-                {{error}}
-              </li>
-            </ul>
-            <button type="button" class="btn-close" (click)="cleanErrors()" aria-label="Close"></button>
-          </div>
+          <app-show-info [InfoEmitter]="InfoUpdateEmitter"></app-show-info>
 
         </div>
       </div>

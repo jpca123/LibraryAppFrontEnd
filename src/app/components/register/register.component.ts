@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import User from 'src/app/models/User';
+import { ShowInfoTypes } from 'src/app/models/types';
 import { SecurityService } from 'src/app/services/security.service';
 
 @Component({
@@ -9,9 +10,9 @@ import { SecurityService } from 'src/app/services/security.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-
   user: User = new User();
   passwordConfirm: string;
+  InfoRegisterEmitter = new EventEmitter<{type: ShowInfoTypes, data: any}>();
 
   private securityService: SecurityService;
   private router: Router;
@@ -26,14 +27,17 @@ export class RegisterComponent implements OnInit {
   }
 
   register(){
-    let message = this.validData();
-    if(message !== "") return alert(message);
+    let errors = this.validData();
+    if(errors.length > 0 ) return this.InfoRegisterEmitter.emit({type: ShowInfoTypes.ERROR, data: errors});
 
-    this.securityService.register(this.user).subscribe((data: any)=>{
-      this.router.navigate(["/login"]);
-    }, (err: any)=>{
+    this.securityService.register(this.user).subscribe((data: any) =>{
+      console.log({data})
+      if(data.ok)  this.router.navigate(["/login"]);
+      else this.InfoRegisterEmitter.emit({type: ShowInfoTypes.ERROR, data: ["No se pudo realizar el registro"]});
+    }, 
+    (err: any)=>{
       console.warn("fallo el registro de usuario", err);
-      alert("Falló el registro, intentalo de nuevo");
+      this.InfoRegisterEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     })
   }
 
@@ -42,13 +46,27 @@ export class RegisterComponent implements OnInit {
     this.passwordConfirm = "";
   }
 
-  validData(): string{
-    if(!this.user.userName) return "es requerido el campo userName";
-    if(!this.user.email) return "es requerido el campo email";
-    if(!this.user.gender) return "es requerido el campo gender";
-    if(!this.user.password) return "es requerido el campo password";
-    if(this.user.password !== this.passwordConfirm) return "Las contraseñas no coinciden"
-    return "";
+  validData(): string[]{
+    let errors: string[] = [];
+    if(!this.user.userName) errors.push("El campo userName es requerido");
+    else{
+      if(this.user.userName.length < 5 || this.user.userName.length > 50) errors.push("El nombre de usuario debe ser de entre 5 y 50 caracteres");
+    }
+    if(!this.user.name) errors.push("El campo name es requerido");
+    else{
+      if(this.user.name.length < 5 || this.user.name.length > 50) errors.push("El nombre debe ser de entre 5 y 50 caracteres");
+    }
+    if(this.user.lastName){
+      if(this.user.lastName.length < 5 || this.user.lastName.length > 50) errors.push("El apellido debe ser de entre 5 y 50 caracteres, ademas es opcional");
+    }
+    if(!this.user.email) errors.push("El campo email es requerido");
+    if(!this.user.gender) errors.push("El campo gender es requerido");
+    if(!this.user.password) errors.push("El campo password es requerido");
+    else {
+      if (this.user.password !== this.passwordConfirm) errors.push("Las contraseñas no coinciden");
+      if(this.user.password.length < 8 || this.passwordConfirm.length > 50) errors.push("La contraseña debe ser de entre 8 y 15 caracteres");
+    }
+    return errors;
   }
 
 

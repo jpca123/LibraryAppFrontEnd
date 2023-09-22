@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
+import { ShowInfoTypes } from 'src/app/models/types';
 import { SecurityService } from 'src/app/services/security.service';
 
 @Component({
@@ -9,6 +10,7 @@ import { SecurityService } from 'src/app/services/security.service';
 export class ForgotPasswordComponent implements OnInit {
 
   private securityService: SecurityService;
+  InfoGeneralEmitter = new EventEmitter<{type: ShowInfoTypes, data: any}>();
   email: string = "";
   infoUser: string[] = [];
   constructor(securityServ: SecurityService) {
@@ -24,16 +26,13 @@ export class ForgotPasswordComponent implements OnInit {
   send(){
     this.securityService.forgotPassword(this.email).subscribe((data: any)=>{
       console.log(data)
-      if(data.ok)  this.infoUser = [data.message || "Email Enviado"];
+      if(data.ok)  this.InfoGeneralEmitter.emit({type: ShowInfoTypes.SUCCESS, data: [data.message || "Email Enviado"]});
 
     }, (err: any)=>{
       console.warn("fallo", err);
+      this.InfoGeneralEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     }, this.reset);
 
     
-  }
-
-  cleanInfo(){
-    this.infoUser = [];
   }
 }

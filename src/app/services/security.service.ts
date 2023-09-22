@@ -46,6 +46,7 @@ export class SecurityService {
   }
 
   login(userName: string, password: string): Observable<object> {
+  console.log("service", userName, password)
     return this.http.post(`${this.url}/login`, { userName, password });
   }
 

@@ -15,6 +15,8 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { FavoritesComponent } from './components/favorites/favorites.component';
+import { MyComponent } from './components/my/my.component';
+import { ShowInfoComponent } from './components/show-Info/show-info.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +30,8 @@ import { FavoritesComponent } from './components/favorites/favorites.component';
     RegisterComponent,
     ForgotPasswordComponent,
     FavoritesComponent,
+    MyComponent,
+    ShowInfoComponent
   ],
   imports: [
     BrowserModule,

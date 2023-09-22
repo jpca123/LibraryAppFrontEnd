@@ -1,6 +1,7 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit } from '@angular/core';
 import Author from 'src/app/models/Author';
 import Category from 'src/app/models/Category';
+import { ShowInfoTypes } from 'src/app/models/types';
 import { CategoryService } from 'src/app/services/category.service';
 
 @Component({
@@ -12,9 +13,10 @@ export class CategoriesComponent implements OnInit {
 
   private categoryService: CategoryService;
   ListCategories: Category[] = [];
-  ErrorsCreate: string[] = [];
-  ErrorsUpdate: string[] = [];
-  ErrorsUser: string[] = [];
+
+  InfoUserEmitter = new EventEmitter<{data: any, type: ShowInfoTypes}>();
+  InfoCreateEmitter = new EventEmitter<{data: any, type: ShowInfoTypes}>();
+  InfoUpdateEmitter = new EventEmitter<{data: any, type: ShowInfoTypes}>();
   
   private page: number = 1; 
   private limit: number = 5; 
@@ -37,12 +39,12 @@ export class CategoriesComponent implements OnInit {
       this.ListCategories = this.ListCategories.concat(data.data);
 
       if(data.paginator) this.cuantity = data.paginator.cuantity || 5;
-      console.log(data)
       this.canLoadMore = this.cuantity > (this.limit * (this.page - 1) );
       if(data.ok) this.page += 1;
 
     }, (err: any)=>{
       console.warn("fallo la carga de categorias", err)
+      this.InfoUserEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     })
   }
 
@@ -50,10 +52,10 @@ export class CategoriesComponent implements OnInit {
     event.preventDefault();
 
     // validacion datos
-    console.log(event)
     let category: string = event.target.category.value;
     if(category.match(/d/g)) {
       event.target.reset();
+      this.InfoUserEmitter.emit({type: ShowInfoTypes.ERROR, data: ["La categoria no debe contener numeros"]});
       return alert("la categoria no debe tener numeros")
     };
   }
@@ -66,6 +68,7 @@ export class CategoriesComponent implements OnInit {
         this.CategoryCreate = new Category();
       }, (err: any)=>{
         console.warn("fallo creacion", err);
+        this.InfoCreateEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
       });
   }
 
@@ -84,6 +87,7 @@ export class CategoriesComponent implements OnInit {
 
         this.CategoryUpdate = new Category();
       }, (err: any)=>{
+        this.InfoUpdateEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
         console.warn("fallo edicion", err);
       })
 
@@ -97,14 +101,13 @@ export class CategoriesComponent implements OnInit {
       if(indeObject === -1) return;
 
       this.categoryService.delete(id).subscribe((data: any)=>{
-        if(data.data && data.data.ok){
+        if(data.data){
           this.ListCategories.splice(indeObject, 1);
           this.CategoryUpdate = new Category();
         }
-        else alert("Fallo la eliminacion");
       }, (err: any)=>{
         console.warn("fallo Eliminacion", err);
-        this.ErrorsUser = err.error.errors.map((el: any) => el.message);
+        this.InfoUserEmitter.emit({type: ShowInfoTypes.ERROR, data: err})
       })
 
   }
@@ -134,9 +137,4 @@ export class CategoriesComponent implements OnInit {
     this.CategoryCreate = new Category();
   }
   
-  cleanErrors(){
-    this.ErrorsCreate = [];
-    this.ErrorsUpdate = [];
-    this.ErrorsUser = [];
-  }
 }

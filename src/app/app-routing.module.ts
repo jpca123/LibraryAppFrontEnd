@@ -10,12 +10,14 @@ import { RegisterComponent } from './components/register/register.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { FavoritesComponent } from './components/favorites/favorites.component';
+import { MyComponent } from './components/my/my.component';
 
 const routes: Routes = [
   {path: "", component: HomeComponent, pathMatch: "full"},
   {path: "books", component: BooksComponent, canActivate: [SessionValidatorGuard]},
   {path: "favorites", component: FavoritesComponent, canActivate: [SessionValidatorGuard]},
   {path: "authors", component: AuthorsComponent,  canActivate: [SessionValidatorGuard]},
+  {path: "my", component: MyComponent, canActivate: [SessionValidatorGuard]},
   {path: "categories", component: CategoriesComponent,  canActivate: [SessionValidatorGuard]},
   {path: "login", component: LoginComponent},
   {path: "register", component: RegisterComponent},

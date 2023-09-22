@@ -1,7 +1,8 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit } from '@angular/core';
 import Author from 'src/app/models/Author';
 import Book from 'src/app/models/Book';
 import Category from 'src/app/models/Category';
+import { ShowInfoTypes } from 'src/app/models/types';
 import AuthorService from 'src/app/services/author.service';
 import { BookService } from 'src/app/services/book.service';
 import { CategoryService } from 'src/app/services/category.service';
@@ -22,8 +23,9 @@ export class BooksComponent implements OnInit {
   ListAuthors: Author[] = [];
   ListCategories: Category[] = [];
   ListFavorites: Object[] = [];
-  ErrorsCreate: string[] = [];
-  ErrorsUpdate: string[] = [];
+  InfoCreateEmitter = new EventEmitter<{type: ShowInfoTypes, data: any}>();
+  InfoUpdateEmitter = new EventEmitter<{type: ShowInfoTypes, data: any}>();
+  InfoGeneralEmitter = new EventEmitter<{type: ShowInfoTypes, data: any}>();
 
   BookCreate: Book = new Book();
   BookUpdate: Book = new Book();
@@ -77,7 +79,6 @@ export class BooksComponent implements OnInit {
 
   loadData() {
     this.bookService.getAll(this.page, this.limit).subscribe((data: any) => {
-      console.log(data)
       if (data.data) this.ListBooks = this.ListBooks.concat(data.data);
 
       if (data.paginator) this.cuantity = data.paginator.cuantity;
@@ -85,6 +86,7 @@ export class BooksComponent implements OnInit {
       if(data.ok) this.page += 1;
     }, (err: any) => {
       console.warn("Fallo loadData", err)
+      this.InfoGeneralEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     })
   }
 
@@ -95,6 +97,7 @@ export class BooksComponent implements OnInit {
       }
     }, (err: any) => {
       console.warn("fallo loadAuthors", err);
+      this.InfoGeneralEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     })
   }
 
@@ -105,6 +108,7 @@ export class BooksComponent implements OnInit {
       }
     }, (err: any) => {
       console.warn("fallo loadCategories", err);
+      this.InfoGeneralEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     })
   }
 
@@ -113,9 +117,9 @@ export class BooksComponent implements OnInit {
       if(data.ok){
        return this.ListFavorites = data.data;
       }
-      console.warn("fallo getAll fovourites")
     }, (err: any)=>{
       console.warn("fallo getAll fovourites", err)
+      this.InfoGeneralEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     })
   }
 
@@ -128,9 +132,10 @@ export class BooksComponent implements OnInit {
     let errors: string[] = this.validData(this.BookCreate);
     let formData: FormData = new FormData(event.target);
 
-    if (errors.length > 0) this.ErrorsCreate = [...errors];
+    if (errors.length > 0) {
+      this.InfoCreateEmitter.emit({type: ShowInfoTypes.ERROR, data:errors})
+    }
     else {
-      this.cleanErrors();
       this.create(formData);
       event.target.reset();
     }
@@ -146,9 +151,11 @@ export class BooksComponent implements OnInit {
     let formData: FormData = new FormData(event.target);
 
     formData.set("_id", this.BookUpdate._id || "");
-    if (errors && errors.length > 0) this.ErrorsUpdate = [...errors];
+    if (errors && errors.length > 0) {
+      this.InfoUpdateEmitter.emit({type: ShowInfoTypes.ERROR, data: errors})
+
+    }
     else {
-      this.cleanErrors();
       this.update(formData);
       event.target.reset();
     }
@@ -171,7 +178,7 @@ export class BooksComponent implements OnInit {
 
     }, (err: any) => {
       console.warn("fallo creacion", err)
-      this.ErrorsCreate = err.error.errors.map((el: any) => el.message || el.msg);
+      this.InfoCreateEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     })
   }
 
@@ -190,7 +197,7 @@ export class BooksComponent implements OnInit {
         this.resetUpdate();
       }
     }, (err: any) => {
-      this.ErrorsUpdate = err.error.errors.map((el: any) => el.message || el.msg);
+      this.InfoUpdateEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
       console.warn("fallo update", err)
     })
   }
@@ -208,6 +215,7 @@ export class BooksComponent implements OnInit {
       }
     }, (err: any) => {
       console.warn("fallo eliminacion", err);
+      this.InfoGeneralEmitter.emit(err.error.errors);
     })
   }
 
@@ -268,9 +276,5 @@ export class BooksComponent implements OnInit {
     this.BookUpdate = new Book();
   }
 
-  cleanErrors(){
-    this.ErrorsCreate = [];
-    this.ErrorsUpdate = [];
-  }
 
 }

@@ -1,0 +1,8 @@
+<div *ngIf="Visible" class="alert alert-{{classTypeInfo}} alert-dismissible fade show" role="alert">
+  <ul>
+    <li *ngFor="let info of Info">
+      {{info}}
+    </li>
+  </ul>
+  <button type="button" class="btn-close" (click)="cleanInfo()" aria-label="Close"></button>
+</div>

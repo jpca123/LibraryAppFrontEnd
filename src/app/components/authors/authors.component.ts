@@ -1,5 +1,6 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, OnInit } from '@angular/core';
 import Author from 'src/app/models/Author';
+import { ShowInfoTypes } from 'src/app/models/types';
 import AuthorService from 'src/app/services/author.service';
 
 @Component({
@@ -13,9 +14,10 @@ export class AuthorsComponent implements OnInit {
 
   title: string = "Autores";
   ListAuthors: Author[] = [];
-  ErrorsCreate: string[] = [];
-  ErrorsUpdate: string[] = [];
-  ErrorsUser: string[] = []
+
+  InfoCreateEmitter = new EventEmitter<{type: ShowInfoTypes, data: any}>(); 
+  InfoUpdateEmitter = new EventEmitter<{type: ShowInfoTypes, data: any}>(); 
+  InfoUserEmitter = new EventEmitter<{type: ShowInfoTypes, data: any}>(); 
 
   private limit: number = 5;
   private page: number = 1;
@@ -41,10 +43,10 @@ export class AuthorsComponent implements OnInit {
 
       if(data.ok) this.page += 1;
       this.canLoadMore = this.cuantity > (this.limit * (this.page - 1));
-      console.log(data, this)
 
     }, (err: any) => {
       console.warn("Fallo la carga", err)
+      this.InfoUserEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     })
   }
 
@@ -57,7 +59,7 @@ export class AuthorsComponent implements OnInit {
       this.AuthorCreate = new Author();
     }, (err: any) => {
       console.warn("fallo la creacion", err);
-      this.ErrorsCreate = err.errors.map((el: any)=> el.message || el.msg);
+      this.InfoCreateEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     })
   }
 
@@ -70,20 +72,17 @@ export class AuthorsComponent implements OnInit {
 
     this.authorService.update(id, this.AuthorUpdate).subscribe((data: any) => {
       if (data.data) {
-        console.log(data)
-        console.log(this)
         let objectUpdated: Author = data.data as Author;
 
         let indexObject: number = this.ListAuthors.findIndex(author => author._id === id);
         if (indexObject < 0) return console.log("no se encontro el objeto de update en la lista");
-        console.log(indexObject, data)
 
         this.ListAuthors[indexObject] = data.data;
         this.AuthorUpdate = new Author();
       }
     }, (err: any) => {
       this.AuthorUpdate = new Author();
-      this.ErrorsCreate = err.errors.map((el: any)=> el.message || el.msg);
+      this.InfoUpdateEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     })
   }
 
@@ -99,7 +98,7 @@ export class AuthorsComponent implements OnInit {
       this.AuthorUpdate = new Author();
     }, (err: any) => {
       console.log("fallo la eliminacion", err);
-      this.ErrorsUser = err.error.errors.map((error: any) => error.message);
+      this.InfoUserEmitter.emit({type: ShowInfoTypes.ERROR, data: err});
     });
   }
 
@@ -110,11 +109,5 @@ export class AuthorsComponent implements OnInit {
     if (!object) return;
 
     this.AuthorUpdate = Object.assign({}, object);
-  }
-
-  cleanErrors(){
-    this.ErrorsCreate = [];
-    this.ErrorsUpdate = [];
-    this.ErrorsUser = [];
   }
 }

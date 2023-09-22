@@ -27,6 +27,7 @@
                     <option value="Prefer not say">Prefiero no decirlo</option>
                 </select>
             </div>
+
             <div class="form-group my-2">
                 <label for="password" class="form-label">Contraseña</label>
                 <input type="password" name="password" placeholder="Contraseña" [(ngModel)]="user.password" maxlength="50" id="password" class="form-control">
@@ -36,6 +37,10 @@
                 <input type="password" name="password2" [(ngModel)]="passwordConfirm" maxlength="50" id="password2" class="form-control" placeholder="Repite Contraseña">
             </div>
 
+            <!-- Errors -->
+            <div class="form-group my-2">
+                <app-show-info [InfoEmitter]="InfoRegisterEmitter"></app-show-info>
+            </div>
 
             <section class="d-flex align-items-center justify-content-around">
                 <button class="my-2 mx-a btn btn-primary" (click)="register()" type="button">Registrar</button>

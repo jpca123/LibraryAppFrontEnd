@@ -1,0 +1,126 @@
+<div class="container">
+  <h1 class="text-center fs-4 mt-3">Nombre: {{user.userName}}</h1>
+  <p class="my-1">Seccion de perfil, aqui puedes editar la informacion de tu usuario</p>
+
+  <div class="container-sm text-center p-4">
+    <app-show-info [InfoEmitter]="InfoGeneralEmitter"></app-show-info>
+  </div>
+
+  <div class="container-sm">
+    <div class="d-flex align-items-center justify-content-around flex-wrap">
+      <div class="btn btn-success mx-a my-1"  data-bs-toggle="modal" data-bs-target="#modalUpdate">Editar</div>
+      <div class="btn btn-secondary mx-a my-1" (click)="closeSession()">Cerrar Sesion</div>
+      <div class="btn btn-danger mx-a my-1"  data-bs-toggle="modal" data-bs-target="#modalDelete">Eliminar</div>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th colspan="2" class="text-center fs-4">Informacion {{user.userName}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Nombre</td>
+          <td>{{user.name}}</td>
+        </tr>
+        <tr>
+          <td>Apellido</td>
+          <td>{{user.lastName}}</td>
+        </tr>
+        <tr>
+          <td>Nombre usuario</td>
+          <td>{{user.userName}}</td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td>{{user.email}}</td>
+        </tr>
+        <tr>
+          <td>Genero</td>
+          <td>{{user.gender}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+
+<!-- modal update -->
+<div class="modal fade" id="modalUpdate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form enctype="multipart/form-data" name="update" class="modal-content" (ngSubmit)="ngOnSubmitUpdate($event)">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="exampleModalLabel">Editar Libro</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form container-sm">
+          <div class="form-group my-2">
+              <label for="userName" class="form-label">Nombre de usuario</label>
+              <input type="text" name="userName" id="userName" placeholder="username" [(ngModel)]="userUpdate.userName" minlength="3" maxlength="80" class="form-control">
+          </div>
+          <div class="form-group my-2">
+              <label for="name" class="form-label">Nombre</label>
+              <input type="text" name="name" id="name" placeholder="Nombre" [(ngModel)]="userUpdate.name" maxlength="60" class="form-control">
+          </div>
+          <div class="form-group my-2">
+              <label for="lastName" class="form-label">Apellido</label>
+              <input type="text" name="lastName" id="lastName" placeholder="Apellido" [(ngModel)]="userUpdate.lastName" class="form-control">
+          </div>
+          <div class="form-group my-2">
+              <label for="" class="form-label">Email</label>
+              <input type="email" name="email" [(ngModel)]="userUpdate.email" placeholder="Email" maxlength="50" id="email" class="form-control">
+          </div>
+          <div class="form-group my-2">
+              <label for="" class="form-label">Genero</label>
+              <select name="gender" [(ngModel)]="userUpdate.gender" id="gender" class="form-select">
+                  <option disabled selected>Selecciona Genero</option>
+                  <option value="Masculine">Masculino</option>
+                  <option value="Femenine">Femenino</option>
+                  <option value="Prefer not say">Prefiero no decirlo</option>
+              </select>
+          </div>
+      
+          <!-- <div class="form-group my-2">
+              <label for="password" class="form-label">Contraseña</label>
+              <input type="password" name="password" placeholder="Contraseña" [(ngModel)]="userUpdate.password" maxlength="50" id="password" class="form-control">
+          </div>
+          <div class="form-group my-2">
+              <label for="password2" class="form-label">Repite la contraseña</label>
+              <input type="password" name="password2" [(ngModel)]="passwordConfirm" maxlength="50" id="password2" class="form-control" placeholder="Repite Contraseña">
+          </div> -->
+      
+          <!-- Errors -->
+          <div class="form-group my-2">
+              <app-show-info [InfoEmitter]="InfoUserEmitter"></app-show-info>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="reset" class="btn btn-secondary">Limpiar</button>
+        <button type="submit" class="btn btn-success">Editar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- modal delete -->
+<div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="exampleModalLabel">Eliminar Libro</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estas seguro de eliminar tu cuenta?, esta acción no puede ser revertida</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-danger" (click)="deleteAccount()" data-bs-dismiss="modal">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
