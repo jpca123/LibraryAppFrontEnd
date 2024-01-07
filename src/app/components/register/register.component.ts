@@ -9,9 +9,9 @@ import { SecurityService } from 'src/app/services/security.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
   user: User = new User();
-  passwordConfirm: string;
+  passwordConfirm = "";
   InfoRegisterEmitter = new EventEmitter<{type: ShowInfoTypes, data: any}>();
 
   private securityService: SecurityService;
@@ -20,10 +20,6 @@ export class RegisterComponent implements OnInit {
   constructor(securityServ: SecurityService, router: Router) {
     this.securityService = securityServ;
     this.router = router;
-    this.passwordConfirm = "";
-  }
-
-  ngOnInit(): void {
   }
 
   register(){
